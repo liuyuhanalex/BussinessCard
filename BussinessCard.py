@@ -3,6 +3,7 @@ import ssl,sys
 import base64
 import importlib
 import os,re
+import time
 
 importlib.reload(sys)
 
@@ -40,10 +41,16 @@ for i in os.listdir(root):
         "Content-Type":"application/x-www-form-urlencoded",
         "apikey":"dGqa7vM8RgIVE89yr0cPXBWs"
     }
+    try:
+        res = requests.post(url=url,headers=headers,data=data)
+    except:
+        time.sleep(5)
+        res = requests.post(url=url,headers=headers,data=data)
 
-    res = requests.post(url=url,headers=headers,data=data)
     result = res.json()
-    with open(os.path.join(resultFolder,"{}.txt".format(count)),"a",encoding='utf8') as f:
+    filename = i[:-4]
+    with open(os.path.join(resultFolder,"{}.txt".format(filename)),"a",encoding='utf8') as f:
         for line in result["words_result"]:
             f.write(line["words"]+"\n")
     count+=1
+    print("Already finish {}!".format(count))
